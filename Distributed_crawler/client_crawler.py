@@ -4,11 +4,8 @@ import time
 from mongo_redis_mgr import MongoRedisUrlManager
 import argparse
 import socket
-
 import urllib3
-
 import os
-
 # from hdfs import *
 # from hdfs.util import HdfsError
 from socket_client import SocketClient
@@ -61,7 +58,7 @@ parse_app_arguments()
 def get_page_content(cur_url, depth):
     global dir_name, dbmanager
 
-    print( "downloading %s at level %d" % (cur_url, depth))
+    print("downloading %s at level %d" % (cur_url, depth))
     links = []
     try:
         http = urllib3.PoolManager()
@@ -74,10 +71,10 @@ def get_page_content(cur_url, depth):
         fo.close()
         dbmanager.finishUrl(cur_url)
     except IOError as err:
-        print( "get_page_content()", err )
+        print("get_page_content()", err)
         raise
     except Exception as err :
-        print( "get_page_content()", err )
+        print("get_page_content()", err)
         raise
 
     html = etree.HTML(r.data.lower().decode('utf-8'))
@@ -168,14 +165,14 @@ def start_heart_beat_thread():
         t.setDaemon(True)
         t.start()
     except Exception as err:
-        print( "Error: unable to start thread", err)
+        print("Error: unable to start thread", err)
         raise
 
 def crawl():
     # thread pool size
     max_num_thread = 5
     CRAWL_DELAY = 2
-    global dbmanager, is_root_page, threads, hb_period = 
+    global dbmanager, is_root_page, threads, hb_period
 
     while True:
         if server_status == pc.STATUS_PAUSED:
@@ -197,7 +194,7 @@ def crawl():
             time.sleep(hb_period)
             continue
         else:
-            print( 'current task is: ', curtask['url'], "at depth: ", curtask['depth'])
+            print('current task is: ', curtask['url'], "at depth: ", curtask['depth'])
 
         # looking for an empty thread from pool to crawl
 
@@ -222,7 +219,7 @@ def crawl():
                     time.sleep(CRAWL_DELAY)
                     break
                 except Exception as err:
-                    print( "Error: unable to start thread", err)
+                    print("Error: unable to start thread", err)
                     raise
 def finish():
     global client_id
@@ -238,7 +235,7 @@ def init():
     if os.path.exists(dir_name) is False:
         os.mkdir(dir_name)
     dbmanager.clear()
-    dbmanager.enqueueUrl('http://www.mafengwo.cn', 'new', 0 )
+    dbmanager.enqueueUrl('http://www.mafengwo.cn', 'new', 0)
 
     register_request = {}
     register_request[pc.MSG_TYPE] = pc.REGISTER

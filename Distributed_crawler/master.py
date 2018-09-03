@@ -90,6 +90,7 @@ class CrawlMaster:
 
     def reorder_queue(self):
         g = nx.DiGraph()
+        print("test11111")
         cursor = self.db.urlpr.find()
         for site in cursor:
             url = site['url']
@@ -105,11 +106,11 @@ class CrawlMaster:
     def periodical_check(self):
         while True:
             clients_status_ok = True
-
+            ###检查是否需要排序
             if self.is_reordering is False and time.time() - self.last_rereoder_time > constants['reorder_period']:
                 self.server_status = pc.STATUS_PAUSED
                 self.is_reordering = True
-
+            ##检查客服端是否掉线
             for cid, state in self.clients.iteritems():
                 # no heart beat for 2 mins, remove it
                 if time.time() - state['time'] > constants['connection_lost_period']:
@@ -118,15 +119,15 @@ class CrawlMaster:
                     # set client status to be CONNECTION_LIST
                     self.clients[cid]['status'] = pc.STATUS_CONNECTION_LOST
                     continue
-
+                #检查是否与服务端之前的要求一致
                 if state['status'] != self.server_status:
                     clients_status_ok = False
                     break
-
+            #检查是否满足排序条件
             if clients_status_ok and self.server_status == pc.STATUS_PAUSED and self.is_reordering:
                 self.reorder_queue()
                 self.last_rereoder_time = time.time()
-                is_reordering = False
+                self.is_reordering = False
                 self.server_status = pc.STATUS_RUNNING
 
             time.sleep(constants['status_check_intervel'])

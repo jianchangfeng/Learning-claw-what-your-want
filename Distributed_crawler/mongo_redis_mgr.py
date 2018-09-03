@@ -30,9 +30,9 @@ class MongoRedisUrlManager:
 
     def dequeueUrl(self):
         record = self.db.mfw.find_one_and_update(
-            { 'status': 'new'}, 
-            { '$set': { 'status' : 'downloading'} }, 
-            { 'upsert':False, 'returnNewDocument' : False} 
+            {'status': 'new'},
+            {'$set': {'status': 'downloading'}},
+            {'upsert':False, 'returnNewDocument': False}
         )
         if record:
             return record
@@ -61,7 +61,6 @@ class MongoRedisUrlManager:
         self.redis_client.flushall()
         self.db.mfw.drop()
 
-    
     def set_url_links(self, url, links):
         try:
             self.db.urlpr.insert({
