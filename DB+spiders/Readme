@@ -1,0 +1,4 @@
+This code is mutil thread to claw something on web site.
+The main thought is many spiders vist Databases like MogoDB or mysqi to get some url
+firt your get a root page, and dequeue other new url on root url page, and enqueue your new url into MogoDB or mysql
+Secend you can get many new url on MogoDB
